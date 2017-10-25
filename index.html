@@ -1,0 +1,1437 @@
+<!DOCTYPE HTML>
+<html>
+<head> 
+<meta charset="utf-8" />
+<title>Measuring the Subjective: The Performance Dashboard </title>
+<!--
+Made by: Estelle Weyl
+Copyright:  CC-SA-NC-BY - Creative Commons Attribution-NonCommercial-ShareAlike
+Based on: http://estelle.github.com/slides 
+-->    
+<link class="removeForAT" rel="stylesheet" href="css/index.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
+<style>
+.icon {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-size: 2rem;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+.divider ol + a {
+	display: block;
+	text-align: right;
+	font-size: 2rem;
+	color: orange;
+}
+
+ol + a  .icon {
+	color: orange;
+}
+
+</style>
+
+</head>
+
+<body> 
+
+<div id="presentation">
+   <div id="slides">
+   
+
+<!-- TITLE SLIDE --> 
+  <div class="slide intro">
+    <section class="content">
+    <h1 style="font-size: 3rem; margin-top: 10%;">Measuring the Subjective: <br/>Speed Perception </h2>
+      <p><a href="http://estelle.github.io/lndwebperf">http://estelle.github.io/lndwebperf</a></p>
+      <button id="killCSS" class="skiplink">Enable Screen Reader Access</button>
+    </section>
+</div>
+
+ 
+<!-- TITLE SLIDE --> 
+  <div class="slide ">
+  <header><h1>Table of Contents</h1></header>
+    <section class="content">
+    <ol>
+    <li>Performance Overview</li>
+    <li>Visual Metrics: SI &amp; PSI</li>
+    <li>SpeedPerception Study</li>
+    <li>Lighthouse</li>
+    </ol>
+
+    </section>
+</div>
+
+
+<!-- ESTELLE WEYL -->
+<div class="slide">
+<section class="content">
+<h1>Estelle Weyl</h1>
+
+<p>Open Web Evangelist / Front End Engineer<br/>
+</p>
+<p>
+Twitter: <a href="http://www.twitter.com/webdevtips">@webdevtips</a>,  <a href="http://www.twitter.com/estellevw">@estellevw</a>,  <a href="http://www.twitter.com/standardista">@standardista</a><br/>Blog: <a href="http://www.standardista.com">www.standardista.com</a></p>
+<div class="list-of-images">
+<ul>
+<li>  <img src="http://akamaicovers.oreilly.com/images/9780987467485/cat.gif" alt="HTML5 and CSS3 for the Real World"></li>
+<li>  <img src="http://akamaicovers.oreilly.com/images/0636920041658/cat.gif" alt="Animations and Transitions with CSS"/></li>
+<li>  <img src="http://akamaicovers.oreilly.com/images/0636920021711/cat.gif" alt="MObile HTML5" /></li>
+<li>  <img src="http://akamaicovers.oreilly.com/images/0636920025955/cat.gif" alt="Web Performance Daybook"/></li>
+<li>  <img src="http://akamaicovers.oreilly.com/images/0636920012726/rc_cat.gif" alt="CSS: The Definitive Guide"></li>
+<li>  <img src="https://images-na.ssl-images-amazon.com/images/I/51kEaOLPoPL._SX379_BO1,204,203,200_.jpg" alt="Flexible boxes in CSS" width="180"></li></ul></div>
+</section>
+</div>
+ 
+
+
+<!-- Talk Table of Contents-->
+<div class="slide divider">
+	<header>
+		<h1>Performance Overview</h1>
+	</header>
+	<section>
+	<ol>
+	<li>What is Web Performance</li>
+	<li>Objective Metrics</li>
+	<li>Perceived Performance</li>
+	</ol>
+	</section>
+</div>
+
+
+
+
+
+
+<script>
+  function playVideos() {
+    for(var count = 0; count < arguments.length; count++) {
+      document.getElementById(arguments[count]).play()
+    }
+  }
+  function explainSP(){
+    playVideos('test1', 'test2');
+    setTimeout(function() {
+      stopVideos('test1', 'test2');
+      }, 7800);
+  }
+  function stopVideos() {
+    for(var count = 0; count < arguments.length; count++) {
+      document.getElementById(arguments[count]).pause();
+    }
+  }
+</script>
+   
+
+<!-- What is FAST -->
+<div class="slide">
+  <header>
+    <h1>What is Fast?</h1>
+  </header>
+  <section>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2200 1200" version="1.1" style="width: 90vw"> <title>What is fast?</title> <style> .findings rect { stroke: #333; stroke-width: 1px; width: 15px; fill: #226DAA; } .findings text { } .grid rect{ stroke: #ccc; stroke-width:2px; stroke-linecap:butt; stroke-linejoin:miter; stroke-opacity:1; fill: #fff; } text { font-size: 40px; font-family:sans-serif; } .values text { font-size: 20px; } .rotate { transform: rotate(-90deg); } </style> 
+<g transform="translate(-20,-90)">
+  <g class="grid" transform="translate(62,-185)"> 
+    <rect width="2100" height="900" y="300" x="50" /> 
+    <rect width="2100" height="700" y="400" x="50" /> 
+    <rect width="2100" height="500" y="500" x="50" /> 
+    <rect width="2100" height="300" y="600" x="50" /> 
+    <rect width="2100" height="100" y="700" x="50" /> 
+  </g> 
+  <g class="findings" transform="translate(80,-185)">
+    <rect height="15" width="15"  y="490" x="240" /> 
+    <text x="180" y="440" class="temphidden">Hello World</text>
+    <rect height="15" width="15" y="490" x="1820" class="temphidden" /> 
+    <text x="1700" y="440" class="temphidden">Lord of the Rings</text> 
+  </g> 
+  <g class="values"> 
+    <text x="100" y="1060">0 s</text> 
+    <text x="200" y="1060">1 s</text> 
+    <text x="300" y="1060">2 s</text> 
+    <text x="400" y="1060">3 s</text> 
+    <text x="500" y="1060">4 s</text> 
+    <text x="600" y="1060">5 s</text> 
+    <text x="700" y="1060">6 s</text> 
+    <text x="800" y="1060">7 s</text> 
+    <text x="900" y="1060">8 s</text> 
+    <text x="1000" y="1060">9 s</text> 
+    <text x="1100" y="1060">10 s</text> 
+    <text x="1200" y="1060">11 s</text> 
+    <text x="1300" y="1060">12 s</text> 
+    <text x="1400" y="1060">13 s</text> 
+    <text x="1500" y="1060">14 s</text> 
+    <text x="1600" y="1060">15 s</text> 
+    <text x="1700" y="1060">16 s</text> 
+    <text x="1800" y="1060">17 s</text> 
+    <text x="1900" y="1060">18 s</text> 
+    <text x="2000" y="1060">19 s</text> 
+    <text x="2100" y="1060">20 s</text>
+  </g> 
+  <g class="axes"> 
+    <text x="600" y="1100">Time to Load</text> 
+    <text x="-700" y="60" class="rotate">Number of Visitors</text>
+  </g>
+</g> 
+</svg> 
+  
+</section>
+</div>
+
+
+
+<!-- What is FAST -->
+<div class="slide">
+  <header>
+    <h1>What is Load Time?</h1>
+  </header>
+  
+<img src="images/what_is_fast.svg" alt="a made up histogram in a bell curve shape with a long tail" style="margin-top: -200px;">
+  
+  </div>
+</section>
+</div>
+
+<!-- DO THIS -->
+<div class="slide">
+  <header>
+    <h1>Which feels faster?</h1>
+  </header>
+  <section>
+
+  <p class="center"><button onclick="explainSP();">Play</button>
+  <div class="testvids flex">
+    <section>
+      <video src="videos/orient.m4v" id="test1"></video>
+      
+    </section>
+    <section>
+      <video src="videos/auto.m4v" id="test2"></video>
+    </section>
+  </div>
+</section>
+</div>
+
+<!-- Overview of Performance -->
+<div class="slide">
+  <header>
+    <h1>Performance</h1>
+  </header>
+  <section>
+  <ul>
+    <li>Time to Load</li>
+    <li>Time until usable</li>
+    <li>Jitter</li>
+    <li>Responsiveness</li>
+    <li>Smoothness</li> 
+  </section>
+</div>
+
+
+<!-- Intro to RAIL -->
+<div class="slide">
+  <header>
+    <h1>RAIL</h1>
+  </header>
+  <section class="center">
+  <p>Four phases of interaction: end-user’s perception</p>
+  <article class="rail">
+  <ul>
+    <li class="l" style="width: 12vw"></li>
+    <li class="i" style="width: 6vw"></li>
+    <li class="a" style="width: 4vw"></li>
+    <li class="r" style="width: 10vw"></li>
+    <li class="l" style="width: 10vw"></li>
+    <li class="a" style="width: 4vw"></li>
+    <li class="r" style="width: 6vw"></li>
+    <li class="r" style="width: 6vw"></li>
+    <li class="a" style="width: 4vw"></li>
+  </ul>
+  <ol>
+    <li class="r">Response to Input <span class="icon">touch_app</span></li>
+    <li class="a">Animation &amp; Scrolling
+    <span class="icon">directions_run</span>
+    </li>
+    <li class="i">Idle <span class="icon">alarm</span></li>
+    <li class="l">Page Load <span class="icon">cached</span></li>
+  </ol>
+  </article>
+
+  <p class="right"><small>Video: <a href="https://www.youtube.com/watch?v=2ksXo2_Lfl0">How Users Perceive the Speed of The Web (2015): Paul Irish / Google</a></small></p>
+  </section>
+</div>
+
+
+
+<!-- what really makes up performance -->
+<div class="slide">
+  <header>
+    <h1>Web Performance</h1>
+  </header>
+  <section>
+  <dl>
+  <dt>Download</dt>
+  <dd class="temphidden"># of resources: images, fonts, HTML, scripts, and CSS loaded</dd>
+  <dt class="temphidden">Parse</dt>
+  <dd class="temphidden">File size of above resources</dd>
+  <dt class="temphidden">Execute</dt>
+  <dd class="temphidden">Parsing &amp; Painting</dd>
+  <dt class="temphidden">Perceived Performance</dt>
+  <dd class="temphidden">Users perception of the speed of the load and reaction time.</dd> 
+  </dl>
+  <div>
+</div>
+  </section>
+</div>
+
+
+<!-- what's involved in page load arrow -->
+<div class="slide">
+  <header>
+    <h1>What's involved in a page load?</h1>
+  </header>
+  <section>
+<ul class="flex arrow">
+  <li>HTTP request</li>
+  <li>DNS lookup</li>
+  <li>TCP Connect</li>
+  <li>HTTP request sent</li>
+  <li>Server Magic</li>
+  <li>Server Sends response</li>
+  <li>Browser receives/<wbr>parses response</li>
+  <li>Resources fetched from Cache</li>
+  <li>Parse &amp; Execute Scripts</li>
+  <li>Render Site</li>
+</ul>
+<ul style="margin-top: 2em">
+  <li>Each request: go back to DNS lookup or HTTP Request</li>
+  <li>Stylesheets are blocking</li>
+  <li>Scripts are blocking.</li>
+</ul>
+</section>
+</div>
+
+
+<!-- What we can measure -->
+<div class="slide">
+  <header class="flex">
+    <h1>Objective Metrics:&nbsp;</h1>
+    <h2>Navigation Timing API</h2>
+  </header>
+  <section style="height: 80vh; overflow: scroll">
+  <img src="images/perfmetrics.svg" alt="Navigation Timing API metrics" style="height: 80vh">
+  </section>
+</div>
+
+
+<!-- objective / subjective -->
+<div class="slide intro">
+  
+    <h1>Objective v. Subjective</h1>
+  
+
+</div>
+
+
+
+
+<!-- video comparison -->
+<!-- Staples and Wolferman's -->
+<div class="slide">
+  <header>
+    <h1>Load Time <span class="temphidden">v. Visually Complete</span></h1>
+  </header>
+  <section>
+  <p class="center">Load Times: 3,729ms v. 3,768ms <button onclick="playVideos('video1', 'video2')">Play</button>
+ </p><p class="center temphidden">Visually Complete: 16s v.
+8.7s </p>
+  <div style="display: flex; justify-content: space-between;">
+    <section>
+      <video src="videos/staples.mp4" id="video1"></video>
+      Staples
+    </section>
+    <section>
+      <video src="videos/wolfermans.mp4" id="video2"></video>
+      Wolferman's
+    </section>
+  </div>
+  </section>
+
+</div>
+
+
+
+<!-- WPT of Staples and Wolferman's -->
+<div class="slide object">
+<object data="https://www.webpagetest.org/video/compare.php?tests=170223_16_311%2C170223_ZY_312&thumbSize=200&ival=1000&end=all"></object>
+</div>
+
+
+<div class="slide">
+  <section>
+    <h1>What is good User Experience?</h1>
+  </section>
+</div>
+
+
+<div class="slide wpt_fake">
+<header style="background-color: #dedede; border-bottom: 3px white solid; text-align: center"><h1>Active v. Passive Waiting</h1></header>
+<section class="list-of-images">
+<ol>
+<li>3.0s</li><li>4.0s</li><li>5.0s</li><li>6.0s</li><li>7.0s</li><li>8.0s</li></ul>
+</ol>
+
+<ul>
+<li><img alt=""  src="files/mlw/thumbnail.jpeg"><br>0%</li>
+<li><img alt=""  src="files/mlw/thumbnail1.jpeg"><br>56%</li>
+<li><img alt=""  src="files/mlw/thumbnail2.jpeg"><br>56%</li>
+<li><img alt=""  src="files/mlw/thumbnail3.jpeg"><br>67%</li>
+<li><img alt=""  src="files/mlw/thumbnail4.jpeg"><br>67%</li>
+<li><img alt=""  src="files/mlw/thumbnail5.jpeg"><br>100%</li></ul>
+
+<ul>
+
+
+<li><img alt=""  src="files/mlw/thumbnail.jpeg"><br>0%</li>
+<li><img alt=""  src="files/mlw/thumbnail.jpeg"><br>56%</li>
+<li><img alt=""  src="files/mlw/thumbnail.jpeg"><br>66%</li>
+<li><img alt=""  src="files/mlw/thumbnail.jpeg"><br>66%</li>
+<li><img alt=""  src="files/mlw/thumbnail5.jpeg"><br>100%</li>
+<li></li></ul>
+</section>
+</div>
+
+
+<div class="slide object">
+<object data="https://www.webpagetest.org/result/170621_T5_1CZK/1/details/#waterfall_view_step1"></object>
+</div>
+
+<div class="slide">
+  <header>
+    <h1>Questions</h1>
+  </header>
+  <section>
+    <ul>
+      <li>How does visual jitter impact perceived performance?
+      <li>Are sites free of visual jitter like modals and overlays viewed as more performant? </li>
+      <li>Is it possible to automatically predict the presence of jitter to help choose a better set of metrics?</li>
+      <li>Does a long DOM Content Loaded impact perceived performance?
+      </li>
+      <li>Can metrics be improved?</li>
+    </ul>
+  </section>
+</div>
+
+
+
+<div class="slide">
+  <section>
+    <h1>User Experience > Developer Experience</h1>
+    <img src="images/wpt_cpu.svg" alt="graph comparison of API timing navigtion metrics for Wolferman's versus Staples" style="max-height: 80vh; width: auto; height: auto; max-width: 90vw">
+  </section>
+</div>
+
+<!-- Talk Table of Contents-->
+<div class="slide divider">
+  <header>
+    <h1>Visual Metrics</h1>
+  </header>
+  <section>
+  <ol>
+  <li>SpeedIndex (SI)</li>
+  <li>Perceptual Speed Index (PSI)</li>
+  </ol>
+  </section>
+</div>
+
+<div class="slide">
+  <header>
+    <h1>Speed Index</h1>
+  </header>
+  <section>
+  <p>Metric on above-fold visual Quality of Experience</p>
+<ul>
+<li>Created by Patrick Meenan (Google)</li>
+<li>Used on WebPage Test </li>
+</ul>
+  </section>
+</div>
+
+
+<!-- images of speed index -->
+<div class="slide">
+  <header>
+    <h1>Speed Index</h1>
+  </header>
+  <section>
+    <p>
+    Aggregate function on quickness of above-the-fold visual completion:</p>
+    <ul class="flex">
+      <li><img src="images/visualprogress_both.gif" alt="speed index graph for both sites"></li>
+      <li><img src="images/visualprogress_both_staples.gif" alt="speed index graph for staples"><span class="si">4,462</span></li>
+      <li><img src="images/visualprogress_both_wolf.gif" alt="speed index graph for wolfermans"><span class="si">5,902</span></li>
+    </ul>
+    <p class="center"><img src="images/si.png" alt="equation for speed index" style="width: 30vw"></p>
+  </section>
+</div>
+
+
+<!-- SI explained -->
+<div class="slide">
+  <header>
+    <h1>Measurement of visual progress in Speed Index</h1>
+  </header>
+  <section>
+  <ul>
+    <li>Frame-by-frame VC progress is computed from pixel-histogram comparisons
+    <p class="center"><img src="images/si.png" alt="equation for speed index" style="width: 30vw"></p>
+    </li>
+    </ul>
+  </section>
+</div>
+ 
+<!-- What is FAST -->
+<div class="slide">
+  <header>
+    <h1>Huh? Speed Index Explained</h1>
+  </header>
+  <section>
+<img src="images/speedindex.svg" alt="a demonstration to help explain how speed index is calculated" style="margin-top: -200px; width: 90vw">
+</section>
+</div>
+
+<!-- SI explained -->
+<div class="slide">
+  <header>
+    <h1>Measurement of visual progress in Speed Index</h1>
+  </header>
+  <section>
+  <ul>
+    <li>Frame-by-frame VC progress is computed from pixel-histogram comparisons
+    <p class="center"><img src="images/si.png" alt="equation for speed index" style="width: 30vw"></p>
+    </li>
+    <li>Pixel-wise similarity (mean histogram difference a.k.a. <acronym title="mean histogram difference">MHD</acronym>) doesn’t capture visual perception!
+<ul><li>Perception of Shape / Color / Object similarity</li></ul></li></ul>
+  </section>
+</div>
+<!-- shape similarity -->
+<div class="slide">
+  <header>
+    <h1>Pixel-wise similarity doesn’t capture <u>shape similarity</u></h1>
+  </header>
+  <section class="center" style="margin: 0">
+  <p style="margin:0; font-size: x-small;">Black/White = 50/50 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <acronym title="mean histogram difference">MHD</acronym> (Mean Histogram Difference) = 0<p>
+  <ul class="fiftyfifty flex">
+    <li class="temphidden" id="sq_diag"><img src="images/square_diagonal.svg" alt="box that is 50% white and 50% black"></li>
+
+    <li class="temphidden" id="sq_half"><img src="images/square_half.svg" alt="box that is 50% white and 50% black"></li>
+    
+    <li class="temphidden"  id="sq_grid"><img src="images/square_grid.svg" alt="box that is 50% white and 50% black"></li>
+
+    <li class="temphidden"  id="sq_hand"><img src="images/sq_hands.png" alt="box that is 50% white and 50% black" style="border:1px solid #ccc"></li>
+
+    <li class="temphidden"  id="sq_cats"><img src="images/square_cat.svg" alt="box that is 50% white and 50% black"></li>
+
+    <li class="temphidden"  id="sq_flow"><img src="images/square_flower.svg" alt="box that is 50% white and 50% black"></li>
+    </ul>
+
+  </section>
+</div>
+
+
+<!-- color similarity -->
+<div class="slide">
+  <header>
+    <h1>Pixel-wise similarity doesn’t capture <u>color similarity</u></h1>
+  </header>
+  <section>
+  <ul class="flex">
+    <li><img src="images/monolith.png" alt=""></li>
+    <li><img src="images/checkers.png" alt="">
+    </li>
+  </section>
+</div>
+
+<!-- images of speed index 
+<div class="slide">
+  <header>
+    <h1>Speed Index</h1>
+  </header>
+  <section>
+    <p>
+    Aggregate function on quickness of above-the-fold visual completion:</p>
+    <ul class="flex">
+      <li><img src="images/visualprogress_both.gif" alt="speed index graph for both sites"></li>
+      <li><img src="images/visualprogress_both_staples.gif" alt="speed index graph for staples"><span class="si">4,462</span></li>
+      <li><img src="images/visualprogress_both_wolf.gif" alt="speed index graph for wolfermans"><span class="si">5,902</span></li>
+    </ul>
+    <p class="center"><img src="images/si.png" alt="equation for speed index" style="width: 30vw"></p>
+  </section>
+</div>-->
+
+
+<div class="slide">
+  <header>
+    <h1>Proposal for a perceptually oriented visual QoE metric</h1>
+  </header>
+  <section>
+  <ul>
+    <li>Update: Frame-by-frame VC progress computation using <acronym title="Structural SIMilarity">SSIM</acronym>
+    <p class="center"><img src="images/einstein.png" style="height: 60vh; width: auto"></p></li>
+  </ul>
+  </section>
+</div>
+
+
+
+
+
+
+
+<div class="slide">
+  <header>
+    <h1>Perceptual Speed Index</h1>
+  </header>
+  <section>
+  <p>Frame-by-frame VC progress computation using <acronym title="Structural SIMilarity">SSIM</acronym></p>
+  <div class="intro_psi">
+  <p class="center"><img src="images/si.png" alt="equation for perceptual speed index" style="width: 40vw; height: auto;"></p>
+  </div>
+  </section>
+</div>
+
+<div class="slide">
+  <header>
+    <h1>Without Jitter</h1>
+  </header>
+  <section>
+  <ul class="flex">
+    <li style="flex: 1">
+      <img src="images/etsy_psi_si.png" style="width: 40vw">
+    </li>
+    <li style="flex: 1">
+      <video src="videos/etsy_psi_si.m4v"controls style="width: 40vw; height: auto;"></video>
+    </li>
+  </section>
+</div>
+
+<div class="slide">
+  <header>
+    <h1>With Jitter</h1>
+  </header>
+  <section>
+    <ul class="flex">
+    <li style="flex: 1">
+      <img src="images/rl_si_psi.png" style="width: 40vw; height: auto">
+    </li>
+    <li style="flex: 1">
+      <video src="videos/ralphlaurenvideo.m4v" controls style="width: 40vw; height: auto"></video>
+    </li>
+  </section>
+</div>
+
+
+<div class="slide">
+  <header>
+    <h1>PSI v. SI</h1>
+  </header>
+  <section>
+<ul>
+<li>SI and PSI: linearly correlated</li>
+<li class="temphidden">Visual jitter / layout thrashing?  PSI > SI<ul><li>PSI appears higher when visual jitter exists (Pop-up ads / large lay-out changes / etc.)</li></ul>
+</li>
+<li class="temphidden"><acronym title="Structural SIMilarity">SSIM</acronym> based visual progress measurements match human perception more closely than <acronym title="mean histogram difference">MHD</acronym></li>
+
+<li class="temphidden">
+<acronym title="Structural SIMilarity">SSIM</acronym> / <acronym title="mean histogram difference">MHD</acronym> swap doesn’t affect websites without visual jitter
+</li>
+
+</ul>
+<p><img src="images/sivpsi.png" style="height: 60vh; width: auto">
+</section>
+</div>
+
+
+<div class="slide">
+  <header>
+    <h1>Staples</h1>
+  </header>
+  <section>
+  <img src="images/staples_visual_complete_progress.png" alt="visual progression of Staples page load showind SI and PSI"  style="max-height: 80vh; width: auto; height: auto; max-width: 90vw">
+  </section>
+</div>
+
+<div class="slide">
+  <header>
+    <h1>Wolfermans</h1>
+  </header>
+  <section><img src="images/wolfermans_visual_complete_progress.png" alt="visual progression of Wolfermans page load showind SI and PSI"   style="max-height: 80vh; width: auto; height: auto; max-width: 90vw">
+  </section>
+</div>
+
+
+<div class="slide">
+  <header>
+    <h1>PSI v. SI</h1>
+  </header>
+  <section>
+
+
+<p>Speed Index</p>
+<ul><li>Primarily focused on progress of above-fold loading</li>
+<li>Does not account for layout stability</li>
+</ul>
+<p>Perceptual Speed Index</p>
+<ul>
+<li>A perceptually oriented metric to measure above-fold visual QoE</li>
+<li>
+Designed to account for visual jitter (layout stability)</li>
+<li>
+Complementary to SI</li>
+</ul>
+</section>
+</div>
+
+<div class="slide">
+  <header>
+    <h1>Resources</h1>
+  </header>
+  <section>
+<ul>
+<li>
+PSI and SI open sourced on GitHub: <a href="https://github.com/WPO-Foundation/visualmetrics">github.com/WPO-Foundation/visualmetrics</a>
+</li>
+<li>
+For more details and explanations:
+<a href="http://www.parvez-ahammad.org/blog/perceptual-speed-index-psi-for-measuring-above-fold-visual-performance-of-webpages">http://www.parvez-ahammad.org/blog/perceptual-speed-index-psi-for-measuring-above-fold-visual-performance-of-webpages</a> or <a href="http://bit.ly/2ldyo9n">http://bit.ly/2ldyo9n</a>
+</li>
+<li>PSI in action: <a href="https://github.com/GoogleChrome/lighthouse">GoogleChrome Lighthouse</a></li>
+<li>SI in action: <a href="http://webpagetest.org">WebPageTest.org</a></li>
+</ul>
+  </section>
+</div>
+
+
+
+
+<!-- Talk Table of Contents-->
+<div class="slide divider">
+  <header>
+    <h1>SpeedPerception </h1>
+  </header>
+  <section>
+  <ol>
+  <li>SpeedPerception Study Overview</li>
+  <li>Hypothesis</li>
+  <li>Results</li>
+  <li>Learnings</li>
+  <li>Phase 2</li>
+  </ol>
+  </section>
+</div>
+
+
+<div class="slide divider">
+  <header>
+    <h1>SpeedPerception</h1>
+  </header>
+  <section>
+  <blockquote>“SpeedPerception is a large-scale web performance crowdsourcing study focused on the perceived loading performance of above-the-fold content.”</blockquote>
+  <p>Premise: Perception of perceived performance is relative.
+  </section>
+</div>
+
+
+
+
+
+
+
+<div class="slide object">
+  <object data="http://speedperception.com/challenge"></object>
+  <a style="position: absolute; padding: 0.5em; right: 0; top: 0; background: white;" href="http://www.speedperception.com/challenge">SpeedPerception Challenge</a>
+</div>
+
+
+<div class="slide">
+  <header>
+    <h1>Study Hypotheses</h1>
+  </header>
+  <section>
+<p><strong>Hypothesis 1:</strong> Visual metrics will perform better than non-visual/network metrics<br/> </p>
+
+  <p><br/> <strong>Hypothesis 2:</strong> No single metric can explain human choices with 90%+ accuracy</p>
+
+
+<p><br/> <strong>Hypothesis 3:</strong> User will not wait until “Visual Complete” to make their choice (despite the explicit instruction to wait until video turns grey)<br/> </p>
+  </section>
+</div>
+
+
+
+<div class="slide">
+  <header>
+    <h1>Study Metrics</h1>
+  </header>
+  <section>
+  <ul><li>5,444 sessions, of which 51% were complete and valid</li>
+  <li>77,482 votes, of which 75% were valid</li>
+  <p class="center"><img src="images/sp_paircount.png" alt="graph demonstrating each of the 160 pairs webkit-font-feature-settings tested between 230 and 330 times"></p>
+  </section>
+</div>
+
+<div class="slide">
+  <header>
+    <h1>Feedback</h1>
+  </header>
+  <section>
+  <p>Perception of speed and UX strongly impacted by popups / overlays</p>
+  <p class="center"><img src="images/sp_words.png" alt="histogram of comments made, highlighting that pop ups was commonly mentioned" style="max-height: 70vh; width: auto; height: auto; max-width: 90vw">
+  </section>
+</div>
+
+
+<div class="slide divider">
+  <header>
+    <h1>Hypothesis 3</h1>
+  </header>
+  <section>
+  </section>
+</div>
+
+
+<div class="slide">
+  <section>
+    <p><strong>Hypothesis 3:</strong> User will not wait until “Visual Complete” to make their choice (despite the explicit instruction to wait until video turns grey)</p>
+    <img class="temphidden" src="images/hyp3.png" style="max-height: 60vh">
+  </section>
+</div>
+
+
+
+
+
+
+
+
+<div class="slide divider">
+  <header>
+    <h1>Hypothesis 1</h1>
+  </header>
+  <section>
+  </section>
+</div>
+
+
+<div class="slide">
+  <section>
+  <p><strong>Hypothesis 1:</strong> Visual metrics will perform better than non-visual/network metrics</p>
+<img src="images/h2_original.svg" style="height: 85vh; margin-top: -80px">
+<div class="true temphidden">Not True</div>
+  </section>
+</div>
+
+
+
+<div class="slide">
+  <header>
+    <h1>Questions to Consider</h1>
+  </header>
+  <section>
+  <ul>
+  <li>Does presence of visual jitter / interstitials interfere with metric performance? <ul><li>Can metrics be improved?</li></ul></li>
+
+<li>Will there be different trends for sites that are free of visual jitter like modals and overlays?</li>
+
+<li>Is it possible to automatically predict the presence of jitter to help choose a better set of metrics?</li></ul>
+
+  </section>
+</div>
+
+
+<div class="slide" style="background: url(images/equation.png); background-size: contain; background-position: center; background-repeat: no-repeat">
+  <header>
+    
+  </header>
+  <section class="flex" style="flex-direction: column; align-items: center";><img class="temphidden" src="images/hyp3.png" style="max-height: 50vh" alt="graph showing most people have enough information to choose which page loads faster somewhere between PSI, load time and visually complete" style="float: left">
+  <img class="temphidden" src="images/si.png" alt="equation for Speed Index" style="max-width: 50vw; margin: 1vh"> 
+  </section>
+</div>
+
+<div class="slide">
+  <section>
+  <p><strong>Hypothesis 1:</strong> Visual metrics will perform better than non-visual/network metrics</p>
+<img src="images/h2_revised.svg" style="height: 85vh; margin-top: -80px">
+<div class="true temphidden">True</div>
+  </section>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="slide divider">
+  <header>
+    <h1>Hypothesis 2</h1>
+  </header>
+  <section>
+  </section>
+</div>
+
+
+
+
+<div class="slide">
+<section>
+    <p><strong>Hypothesis 2:</strong> No single metric can explain human choices with 90%+ accuracy</p>
+
+  <img src="images/h1_original.svg" style="height: 85vh; margin-top: -80px">
+
+  <div class="true temphidden">True</div>
+  </section>
+</div>
+
+
+<div class="slide">
+<section>
+    <p><strong>Hypothesis 2:</strong> No single metric can explain human choices with 90%+ accuracy</p>
+
+  <img src="images/h2_revised.svg" style="height: 85vh; margin-top: -80px">
+
+  <div class="true temphidden">Still True</div>
+  </section>
+</div>
+
+
+
+<div class="slide">
+  <header>
+    <h1>Conclusions &amp; Thoughts</h1>
+  </header>
+  <section>
+  
+
+<ul>
+<li>There appears to be no one unicorn metric but, is there a combination synthetic metric (joint ML model) that will do a better job?</li>
+</ul>
+</section>
+</div>
+
+
+<div class="slide">
+    <header>
+    <h1>Conclusions &amp; Thoughts</h1>
+  </header>
+  <section>
+  <p>
+<img src="images/h2_ttc.svg" style="height: 85vh; margin-top: -80px">
+  </section>
+</div>
+
+<div class="slide">
+    <header>
+    <h1>Conclusions &amp; Thoughts</h1>
+  </header>
+  <section>
+  <p>
+<img src="images/h2_ttc_combo.svg" style="height: 85vh; margin-top: -80px">
+  </section>
+</div>
+
+<div class="slide">
+  <header>
+    <h1>Conclusions &amp; Thoughts</h1>
+  </header>
+  <section>
+  
+
+<ul>
+<li>There appears to be no one unicorn metric but, is there a combination synthetic metric (joint ML model) that will do a better job?</li>
+
+
+<li>People only looked two videos and made the call. Is there some additional information that we can extract from videos that will improve our models?</li>
+</ul>
+</section>
+</div>
+<!-- WPT of Staples and Wolferman's #2-->
+<div class="slide object">
+<object data="https://www.webpagetest.org/video/compare.php?tests=170228_WQ_2NZ%2C170228_RN_2P0&thumbSize=200&ival=1000&end=visual"></object>
+</div>
+
+
+
+
+<!-- Credit for SpeedPerception -->
+<div class="slide">
+  <header>
+    <h1>Credits &amp; Links: SpeedPerception</h1>
+  </header>
+  <section>
+  <ul>
+    <li>Challenge: <a href="http://speedperception.com/">speedperception.meteorapp.com/ </a></li>
+    <li>Findings &amp; Repo: <a href="https://github.com/pahammad/SpeedPerception">github.com/pahammad/SpeedPerception</a></li>
+    <li>Team:
+
+<ul><li><strong>Qingzhu (Clark) Gao</strong>: Data Scientist @ Instart Logic</li>
+<li><strong>Parvez Ahammad</strong>: Head of Data Science &amp; Machine Learning @ Instart Logic</li>
+<li><strong>Prasenjit Dey</strong>: Software Engineer @ Instart Logic</li></ul></li></ul>
+
+<p>Phase-1 crowd sourced 07/28/2016 - 09/30/2016.</p> 
+  </section>
+</div>
+
+<div class="slide">
+  <header>
+    <h1>Speed Perception Phase 2</h1>
+  </header>
+  <section>
+    <ul>
+      <li>How do visual jitter &amp; interstitials impact perceived performance?
+        <ul>
+          <li>Do they interfere with metric performance? </li>
+          <li>Can metrics be improved?</li>
+        
+          <li>Are sites free of visual jitter like modals and overlays viewed as more performant? </li>
+          <li>Is it possible to automatically predict the presence of jitter to help choose a better set of metrics?</li>
+        </ul>
+      <li>Does a long   DOM Content Loaded impact perceived performance?
+      </li>
+    </ul>
+  </section>
+</div>
+
+
+
+<div class="slide">
+  <section>
+    <h1>User Experience > Developer Experience</h1>
+    <img src="images/wpt_cpu.svg" alt="same image comparing navigtion timing API metrics between Staples and Wolfermans" style="max-height: 80vh; max-width: 90vw; height: auto; width: auto; margin: auto; display: block">
+  </section>
+</div>
+
+<!-- Divider - Lighthouse -->
+<!-- Talk Table of Contents-->
+<div class="slide divider">
+  <header>
+    <h1>Lighthouse</h1>
+  </header>
+  <section>
+  <ol>
+  <li>Code Example</li>
+  <li>Lighthouse</li>
+  <li>Site improvements</li>
+  </ol>
+  </section>
+</div>
+
+  <div class="slide object"><object data="https://machinelearningworkshop.com"></object></div>
+
+<div class="slide">
+<header><h1>What Lighthouse Tests</h1></header>
+<section>
+<ul><li>Progressive Web App</li>
+<li>Performance</li>
+<li>Best Practices</li>
+<li>Accessibility</li>
+</ul>
+</section>
+</div>
+
+<div class="slide">
+<header><h1>Accessing Lighthouse</h1></header>
+<section>
+<ul><li>Chrome Extension: <a href="https://chrome.google.com/webstore/detail/lighthouse/blipmdconlkpinefehnmjammfjpmpbjk?hl=en">https://chrome.google.com/webstore/detail/lighthouse/blipmdconlkpinefehnmjammfjpmpbjk</a></li>
+<li>Chrome Canary: Developer Tool >  "Audits"</li>
+<li><p>Command line:</p>
+<pre>npm install -g lighthouse
+lighthouse https://machinelearningworkshop.com</pre></li>
+</ul>
+<p>More info: <a href="https://developers.google.com/web/tools/lighthouse/">https://developers.google.com/web/tools/lighthouse/</a>
+</section>
+</div>
+
+
+<div class="slide">
+<header><h1>Accessibility Checks</h1></header>
+<section>
+<ul>
+<li>Elements Use Attributes Correctly</li>
+<li>Every Image Element Has An alt Attribute</li>
+<li>ARIA Attributes Follow Best Practices</li>
+<li>Element aria-* Attributes are Allowed for the Role</li>
+<li>Element aria-* Attributes Have Valid Values</li>
+<li>
+Elements With ARIA Roles Have The Required aria-* Attributes</li>
+<li>Elements Have Discernable Names</li>
+<li>Buttons have an accessible name</li>
+<li>Every Form Element Has A Label</li>
+<li>Elements Describe Contents Well</li>
+<li>Color Contrast Is Satisfactory</li>
+<li>Elements Are Well Structured</li>
+<li>Page Specifies Valid Language</li>
+<li>Meta Tags Used Properly</li></ul>
+</section>
+</div>
+
+
+<div class="slide object"><object data="includes/lighthouse_pre.html#accessibility"></object></div>
+
+<div class="slide">
+<header><h1>Accessibility Concerns</h1></header>
+<section>
+<ul>
+  <li>Fixed color contrast on headers</li>
+  <li>Checked the language attribute on the HTML</li>
+  <pre>&lt;html lang="en-US"></html>
+</ul>
+</section>
+</div>
+
+
+<div class="slide object">
+<header><h1>Colors</h1></header><object data="https://machinelearningworkshop.com"></object></div>
+
+<div class="slide">
+<header>
+  <h1>Best Practices Checks</h1>
+</header>
+<section>
+<ul>
+  <li>Use HTTP/2 for own resources</li>
+  <li>Avoid Application Cache</li>
+  <li>Avoid WebSQL DB</li>
+  <li>Use HTTPS</li>
+  <li>Use passive listeners to improve scrolling performance</li>
+<li>Avoid Mutation Events in its own scripts</li>
+<li>Avoid document.write()</li>
+<li>Open external anchors using rel="noopener"</li>
+<li>Avoid requesting geolocation permission on page load</li>
+<li>Avoid requesting notification permission on page load</li>
+<li>Avoid deprecated APIs</li>
+<li>Allow pasting in password input fields</li></ul>
+</section>
+</div>
+
+
+<div class="slide object"><object data="includes/lighthouse_pre.html#best-practices"></object></div>
+
+
+
+<div class="slide">
+<header><h1>Best Practices Issues</h1></header>
+<section>
+<ul>
+<li>Uses HTTPS: 16 insecure requests found</li>
+<li>Uses HTTP/2 for its own resources: 12 requests were not handled over h2
+</li>
+<li>Manifest's <code>short_name</code> won't be truncated when displayed on homescreen</li>
+</ul>
+</section>
+</div>
+
+
+
+
+<div class="slide">
+<header><h1>Let's Encrypt</h1></header>
+<section>
+<p>Install Let's Encrypt</p>
+<pre>$ /scripts/install_lets_encrypt_autossl_provider</pre>
+<p>Redirect http:// to https:// in .htaccess</p>
+<pre>RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule (.*) https://%{HTTP_HOST}/%{REQUEST_URI}</pre>
+<a href="http://www.standardista.com/lets-encrypt-on-cpanel/">Installing LetsEncrypt on cPanel</a>
+</section>
+</div>
+
+
+<div class="slide">
+<header><h1>Performance</h1></header>
+<section>
+<ul>
+<li>Metrics
+  <ul>
+    <li>First meaningful paint</li>
+    <li>First Interactive</li>
+    <li>Consistently Interactive</li>
+    <li>Perceptual Speed Index (target: < 1,250)</li>
+    <li>Estimated Input Latency (target: < 50 ms)</li>
+  </ul>
+</li>
+<li>Opportunities
+  <ul>
+    <li>Reduce render-blocking stylesheets</li>
+    <li>Reduce render-blocking scripts</li>
+    <li>Optimize images</li>
+    <li>Properly size images</li>
+    <li>Offscreen images</li>
+  </ul>
+</li>
+<li>Diagnostics
+  <ul><li>Critical Request Chain</li></ul></li></ul>
+</section>
+</div>
+
+
+<div class="slide object"><object data="includes/lighthouse_pre.html#performance"></object></div>
+
+
+<div class="slide">
+<header><h1>Critical Network Waterfall</h1></header>
+<section><pre>Initial Navigation
+ / (www.machinelearningworkshop.com)
+  /css?family=Open+Sans%3A400 (fonts.googleapis.com) - 601.7ms, 10.5KB
+  /css?family=Raleway:400 (fonts.googleapis.com) - 593.8ms, 10.5KB
+  /css/style.css (www.machinelearningworkshop.com) - 577.2ms, 10.5KB
+    …v11/QAU...o4.woff2 (fonts.gstatic.com) - 781.2ms, 10.5KB
+    …v13/cJZ...20.woff2 (fonts.gstatic.com) - 786.6ms, 10.5KB</pre>
+<ul>
+  <li>Get rid of Open Sans</li>
+  <li>Include @font-face inline</li>
+  <li>Move external CSS to internal</li>
+  </ul>
+</section></div>
+
+<div class="slide">
+<header><h1>Performance (Passed)</h1></header>
+<section>
+<ul>
+  <li>Reduce render-blocking scripts</li>
+  <li>Properly size images</li>
+  <li>Optimize images</li>
+  <li>Serve images as WebP</li>
+  <li>Enable text compression</li>
+<li>Avoid enormous network payloads: 159 KB (target: < 1,600 KB)</li>
+<li>Avoids an excessive DOM size: 156 nodes (target: < 1,500 nodes)</li>
+<li>User Timing marks and measures</li>
+</ul>
+</section>
+</div>
+
+
+
+<div class="slide"><header><h1>Progressive Web App Requirements</h1></header>
+
+<p><a href="https://developers.google.com/web/progressive-web-apps/checklist">https://developers.google.com/web/progressive-web-apps/checklist</a></p>
+<section>
+<ul>
+<li>Site is served over HTTPS
+</li><li>Pages are responsive on tablets & mobile devices
+</li><li>The start URL (at least) loads while offline
+</li><li>Metadata provided for Add to Home screen
+</li><li>First load fast even on 3G
+</li><li>Site works cross-browser
+</li><li>Page transitions don't feel like they block on the network
+</li><li>Each page has a URL
+</li><li>Schema.org metadata is provided where appropriate
+</li><li>Social metadata is provided where appropriate
+</li><li>Canonical URLs are provided when necessary
+</li><li>Pages use the History API
+</li><li>Content doesn't jump as the page loads
+</li><li>Pressing back from a detail page retains scroll position on the previous list page
+</li><li>When tapped, inputs aren't obscured by the on screen keyboard
+</li><li>Content is easily sharable from standalone or full screen mode
+</li><li>Site is responsive across phone, tablet and desktop screen sizes
+</li><li>Any app install prompts are not used excessively
+</li><li>The Add to Home Screen prompt is intercepted
+</li><li>First load very fast even on 3G
+</li><li>Site uses cache-first networking
+</li><li>Site appropriately informs the user when they're offline
+</li><li>Provide context to the user about how notifications will be used
+</li><li>UI encouraging users to turn on Push Notifications must not be overly aggressive.
+</li><li>Site dims the screen when permission request is showing
+</li><li>Push notifications must be timely, precise and relevant
+</li><li>Provides controls to enable and disable notifications
+</li><li>User is logged in across devices via Credential Management API
+</li><li>User can pay easily via native UI from Payment Request API.</li></ul>
+
+</section>
+</div>
+</div>
+
+
+<div class="slide object"><object data="includes/lighthouse_pre.html"></object></div>
+
+
+<div class="slide">
+<header><h1>Progressive Web App</h1></header>
+<section>
+<p>Manual Checks</p>
+<ul>
+  <li>Site works cross-browser</li>
+  <li>Page transitions don't feel like they block on the network</li>
+  <li>Each page has a URL</li>
+</ul>
+<p>Passed auto checks</p>
+<ul><li>Contains content when JavaScript is not available
+<li>Page load is fast enough on 3G</li>
+<li>Has a &lt;meta name="viewport"> tag with width or initial-scale</li>
+<li>
+Content is sized correctly for the viewport</li>
+
+
+</section>
+</div>
+
+
+<div class="slide object">
+<header><h1>Progressive Web App Issues</h1></header>
+<object data="includes/lighthouse_pre.html"></object></div>
+
+
+<div class="slide">
+<header><h1>Manifest</h1></header>
+<section><pre>{
+  "short_name": "MLW",
+  "name": "Machine Learning Workshop",
+  "start_url": "/?source=homescreen", 
+  "icons": [
+    {
+      "src": "icon-sm.png", 
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "icon-med.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "icon-lg.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-huge.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],  
+  "background_color": "#FFFFFF",
+  "theme_color": "#226DAA", 
+  "display": "standalone",  
+  "orientation": "portrait",
+  "description": "An April Fool's joke that Estelle still finds funny"
+}</pre></section></div>
+
+
+<div class="slide">
+<header><h1>Include the manifest</h1></header>
+<section class="flex" style="align-items: flex-start; justify-content: space-around;"><div><pre>&lt;link rel="manifest" href="manifest.json"></pre> <p class="temphidden">Let's re-run lighthouse</p></div>
+<img src="images/mlwpwaG3.png" alt="Screenshot of Machine Learning Workshop on an android device" style="width: 360px; box-shadow: -3px -3px 3px rgba(0,0,0,0.2); border: 1px solid #ccc">
+</div>
+
+<div class="slide object">
+<header><h1>Current Status</h1></header>
+<object data="includes/lighthouse_mid.html"></object></div>
+
+
+<div class="slide">
+<header><h1>Dealing with iOS...</h1></header>
+<section>
+<pre>&lt;meta name="apple-mobile-web-app-title" content="MLW">
+&lt;meta name="apple-mobile-web-app-capable" content="yes">
+&lt;!-- use UI framework for back button if you use this -->
+&lt;meta name="apple-mobile-web-status-bar-style" content="black">
+&lt;link rel="apple-touch-icon" href="icon_152x152.png"/>
+&lt;link rel="apple-touch-startup-image" href="pageloadimg.jpg"/>
+</pre>
+<h1>... and Windows</h1>
+<pre>&lt;meta name="msapplication-TileImage" content="icon-144x144.png">
+&lt;meta name="msapplication-TileColor" content="#226DAA">
+</section>
+</div>
+
+
+<div class="slide">
+<header><h1>PWA Issues</h1></header>
+<section>
+<ul>
+  <li>Registers a Service Worker</li>
+  <li>Responds with a 200 when offline</li>
+  <li>User can be prompted to Install the Web App
+    <ul>
+      <li>Site does not register a Service Worker</li>
+      <li>Manifest start_url is not cached by a Service Worker.</li>
+    </ul>
+  </li>
+  <li>Configured for a custom splash screen
+    <ul>
+      <li>Manifest does not have icons at least 512px.</li>
+    </ul>
+  </li>
+</ul></section>
+</div>
+
+<div class="slide">
+<header><h1>Service Worker</h1></header>
+<section><p>Script browser runs in background, separate from a web page, on a separate thread, awakened by events</p></section>
+</div>
+
+<div class="slide">
+<pre>if ('serviceWorker' in navigator) {
+
+  var CACHE_VERSION = '%CACHE_VERSION%';
+  var CACHE_LIST = ['CACHE_VALUES'];
+
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/service-worker.js');
+  });
+
+  self.addEventListener('install', function(event) {
+    event.waitUntil(caches.open(CACHE_VERSION)
+    .then(function(cache) {
+        return cache.addAll(CACHE_LIST);
+    }));
+});
+
+self.addEventListener('activate', function(event) {
+    console.log("service worker has been activated.");
+});
+
+self.addEventListener('fetch', function(event) {
+ console.log('Fetch event for ' + event.request.url);
+     event.respondWith(
+         caches.match(event.request).then(function(response) {
+             if (response) {
+                 console.log('Response found in cache:', response);
+                 return response;
+             } else {
+              console.log('Fetching from network');
+              return fetch(event.request);
+             }
+         })
+     );
+ });
+}</pre>
+<p>Load, Install, Activate, Fetch</p>
+</div>
+<!-- TITLE SLIDE --> 
+  <div class="slide intro">
+    <section class="content">
+    <h1 style="font-size: 3rem; margin-top: 10%;">Thank you</h1>
+      <h2> Measuring the Subjective: <br/>The Performance Dashboard </h2>
+      <p><a href="http://estelle.github.io/SpeedPerception">http://estelle.github.io/SpeedPerception</a></p>
+      <p>Estelle Weyl <br/><a href="https://twitter.com/estellevw">@estellevw</a></p>
+    </section>
+</div>
+
+
+
+
+   </div>
+</div>
+<script src="js/slides.js" class="removeForAT"></script>
+
+</body>
+</html>

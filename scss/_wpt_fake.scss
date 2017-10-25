@@ -1,0 +1,22 @@
+.wpt_fake {
+	background-color: black; 
+	color: white; 
+	font-family: arial, sans-serif;
+}
+.list-of-images {
+	ul, ol {
+		display: flex; 
+		list-style-type: none; 
+		align-content: flex-start;
+		margin: 0;
+
+	}
+	li {
+		min-width: 13vw;
+		flex: 0 0 150px; 
+		text-align: center;
+		font-size: 0.5rem;
+		line-height: 1;
+	}
+	ol li {font-size: 1rem;}
+}
